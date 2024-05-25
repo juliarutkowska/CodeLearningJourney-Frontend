@@ -1,53 +1,110 @@
 import React, { useState, useEffect } from 'react';
+import AddSourceForm from './AddSourceForm';
+import EditSourceForm from './EditSourceForm';
 import DataTable from './DataTable';
+import { Spin, Alert } from 'antd';
 
 const DataFetcher = () => {
-    // Define state to store the response object
     const [responseData, setResponseData] = useState(null);
-    // Define state to store loading state
     const [loading, setLoading] = useState(true);
-    // Define state to store error message
     const [error, setError] = useState(null);
+    const [editSourceId, setEditSourceId] = useState(null);
 
     useEffect(() => {
-        // Function to fetch data from the API
-        const fetchData = async () => {
-            try {
-                // Make a GET request to the API endpoint
-                const response = await fetch('http://localhost:5081/LearningSources');
-                // Check if the response is successful
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // Parse the response JSON data
-                const data = await response.json();
-                // Update the state with the fetched data
-                setResponseData(data);
-            } catch (error) {
-                // If an error occurs, set the error state
-                setError(error.message);
-            } finally {
-                // Set loading state to false after fetching data
-                setLoading(false);
-            }
-        };
-
-        // Call the fetchData function when the component mounts
         fetchData();
-    }, []); // Empty dependency array ensures useEffect runs only once on component mount
+    }, []);
 
-    // Render loading indicator if data is being fetched
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://localhost:5081/LearningSources');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setResponseData(data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAddSource = async (newSource) => {
+        try {
+            const response = await fetch('http://localhost:5081/LearningSources', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newSource),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to add source');
+            }
+            fetchData();
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const handleEditSource = async (sourceId, updatedSource) => {
+        try {
+            const response = await fetch(`http://localhost:5081/LearningSources/${sourceId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedSource),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update source');
+            }
+            fetchData();
+        } catch (error) {
+            setError(error.message);
+        }
+        setEditSourceId(null);
+    };
+
+    const handleDeleteSource = async (sourceId) => {
+        try {
+            const response = await fetch(`http://localhost:5081/LearningSources/${sourceId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete source');
+            }
+            fetchData();
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
     if (loading) {
-        return <div>Loading...</div>;
+        return <Spin size="large" />;
     }
 
-    // Render error message if an error occurred
     if (error) {
-        return <div>Error: {error}</div>;
+        return <Alert message="Error" description={error} type="error" showIcon />;
     }
 
-    // Render the DataTable component with the fetched data
-    return <DataTable data={responseData} />;
+    return (
+        <div>
+            <AddSourceForm onAdd={handleAddSource} />
+            <DataTable
+                data={responseData}
+                onEdit={(sourceId) => setEditSourceId(sourceId)}
+                onDelete={handleDeleteSource}
+            />
+            {editSourceId && (
+                <EditSourceForm
+                    source={responseData.find((source) => source.id === editSourceId)}
+                    onEdit={(updatedSource) => handleEditSource(editSourceId, updatedSource)}
+                    onCancel={() => setEditSourceId(null)}
+                />
+            )}
+        </div>
+    );
 };
 
 export default DataFetcher;
