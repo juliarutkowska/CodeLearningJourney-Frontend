@@ -1,17 +1,29 @@
-import React from 'react';
-import { Table, Button } from 'antd';
+import React, { useState } from 'react';
+import { Table, Button, Input } from 'antd';
 
 const DataTable = ({ data, onEdit, onDelete }) => {
+    const [filterText, setFilterText] = useState('');
+
+    const handleFilterChange = (e) => {
+        setFilterText(e.target.value);
+    };
+
+    const filteredData = data.filter(item =>
+        item.displayName.toLowerCase().includes(filterText.toLowerCase())
+    );
+
     const columns = [
         {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
+            sorter: (a, b) => a.id - b.id,
         },
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Display Name',
+            dataIndex: 'displayName',
+            key: 'displayName',
+            sorter: (a, b) => a.displayName.localeCompare(b.displayName),
         },
         {
             title: 'Actions',
@@ -25,7 +37,17 @@ const DataTable = ({ data, onEdit, onDelete }) => {
         },
     ];
 
-    return <Table dataSource={data} columns={columns} rowKey="id" />;
+    return (
+        <div>
+            <Input
+                placeholder="Filter by name"
+                value={filterText}
+                onChange={handleFilterChange}
+                style={{ marginBottom: '20px', width: '300px' }}
+            />
+            <Table dataSource={filteredData} columns={columns} rowKey="id" />
+        </div>
+    );
 };
 
 export default DataTable;
