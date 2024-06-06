@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Button, Input } from 'antd';
+import NavigationMenu from './NavigationMenu';
 
 const DataTable = ({ data, onEdit, onDelete }) => {
     const [filterText, setFilterText] = useState('');
@@ -36,9 +37,9 @@ const DataTable = ({ data, onEdit, onDelete }) => {
             ),
         },
     ];
-
     return (
         <div>
+            <NavigationMenu />
             <Input
                 placeholder="Filter by name"
                 value={filterText}
@@ -48,6 +49,18 @@ const DataTable = ({ data, onEdit, onDelete }) => {
             <Table dataSource={filteredData} columns={columns} rowKey="id" />
         </div>
     );
+
+    // return (
+    //     <div>
+    //         <Input
+    //             placeholder="Filter by name"
+    //             value={filterText}
+    //             onChange={handleFilterChange}
+    //             style={{ marginBottom: '20px', width: '300px' }}
+    //         />
+    //         <Table dataSource={filteredData} columns={columns} rowKey="id" />
+    //     </div>
+    // );
 };
 
 export default DataTable;
