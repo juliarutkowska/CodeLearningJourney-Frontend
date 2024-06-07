@@ -36,6 +36,16 @@ const DataTable = ({ data, onEdit, onDelete }) => {
                 </>
             ),
         },
+        // {
+        //     title: 'Actions',
+        //     key: 'actions',
+        //     render: (text, record) => (
+        //         <>
+        //             <Button type="link" onClick={() => onEdit(record.id)}>Edit</Button>
+        //             <Button type="link" danger onClick={() => onDelete(record.id)}>Delete</Button>
+        //         </>
+        //     ),
+        // },
     ];
     return (
         <div>
