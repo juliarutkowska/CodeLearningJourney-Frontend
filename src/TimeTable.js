@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Table, Button, Input } from 'antd';
+import React, { useState, useEffect } from 'react';
+import {Table, Input, Button} from 'antd';
 import NavigationMenu from './NavigationMenu';
 
-const DataTable = ({ data, onEdit, onDelete }) => {
+const TimeTable = ({ data, onEdit, onDelete }) => {
     const [filterText, setFilterText] = useState('');
 
     const handleFilterChange = (e) => {
@@ -10,10 +10,16 @@ const DataTable = ({ data, onEdit, onDelete }) => {
     };
 
     const filteredData = data.filter(item =>
-        item.displayName.toLowerCase().includes(filterText.toLowerCase())
+        item.times.toString().includes(filterText.toLowerCase())
     );
 
     const columns = [
+        {
+            title: 'Time',
+            dataIndex: 'times',
+            key: 'times',
+            sorter: (a, b) => a.times - b.times,
+        },
         {
             title: 'ID',
             dataIndex: 'id',
@@ -21,10 +27,10 @@ const DataTable = ({ data, onEdit, onDelete }) => {
             sorter: (a, b) => a.id - b.id,
         },
         {
-            title: 'Display Name',
-            dataIndex: 'displayName',
-            key: 'displayName',
-            sorter: (a, b) => a.displayName.localeCompare(b.displayName),
+            title: 'Date',
+            dataIndex: 'dateColumn',
+            key: 'dateColumn',
+            sorter: (a, b) => new Date(a.dateColumn) - new Date(b.dateColumn),
         },
         {
             title: 'Actions',
@@ -37,18 +43,19 @@ const DataTable = ({ data, onEdit, onDelete }) => {
             ),
         },
     ];
+
     return (
         <div>
             <NavigationMenu />
             <Input
-                placeholder="Filter by name"
+                placeholder="Filter by time"
                 value={filterText}
                 onChange={handleFilterChange}
                 style={{ marginBottom: '20px', width: '300px' }}
             />
-            <Table dataSource={filteredData} columns={columns} rowKey="id" />
+            <Table dataSource={filteredData} columns={columns} rowKey="Id" />
         </div>
     );
 };
 
-export default DataTable;
+export default TimeTable;
