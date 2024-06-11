@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {Table, Input, Button} from 'antd';
-import NavigationMenu from './NavigationMenu';
 
 const TimeTable = ({ data, onEdit, onDelete }) => {
     const [filterText, setFilterText] = useState('');
@@ -15,7 +14,7 @@ const TimeTable = ({ data, onEdit, onDelete }) => {
 
     const columns = [
         {
-            title: 'Time',
+            title: 'Hours',
             dataIndex: 'times',
             key: 'times',
             sorter: (a, b) => a.times - b.times,
@@ -42,21 +41,10 @@ const TimeTable = ({ data, onEdit, onDelete }) => {
                 </>
             ),
         },
-        // {
-        //     title: 'Actions',
-        //     key: 'actions',
-        //     render: (text, record) => (
-        //         <>
-        //             <Button type="link" onClick={() => onEdit(record.id)}>Edit</Button>
-        //             <Button type="link" danger onClick={() => onDelete(record.id)}>Delete</Button>
-        //         </>
-        //     ),
-        // },
     ];
 
     return (
         <div>
-            <NavigationMenu />
             <Input
                 placeholder="Filter by time"
                 value={filterText}

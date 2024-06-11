@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Table, Button, Input } from 'antd';
-import NavigationMenu from './NavigationMenu';
 
 const DataTable = ({ data, onEdit, onDelete }) => {
     const [filterText, setFilterText] = useState('');
@@ -36,27 +35,19 @@ const DataTable = ({ data, onEdit, onDelete }) => {
                 </>
             ),
         },
-        // {
-        //     title: 'Actions',
-        //     key: 'actions',
-        //     render: (text, record) => (
-        //         <>
-        //             <Button type="link" onClick={() => onEdit(record.id)}>Edit</Button>
-        //             <Button type="link" danger onClick={() => onDelete(record.id)}>Delete</Button>
-        //         </>
-        //     ),
-        // },
     ];
     return (
         <div>
-            <NavigationMenu />
             <Input
                 placeholder="Filter by name"
                 value={filterText}
                 onChange={handleFilterChange}
                 style={{ marginBottom: '20px', width: '300px' }}
             />
-            <Table dataSource={filteredData} columns={columns} rowKey="id" />
+            <Table
+                dataSource={filteredData}
+                columns={columns}
+                rowKey="id" />
         </div>
     );
 };
