@@ -5,8 +5,6 @@ import DataTable from './DataTable';
 import TimeTable from './TimeTable';
 import {Spin, Alert, Button, Typography} from 'antd';
 
-const { Link } = Typography;
-
 const DataFetcher = () => {
     const [showSourceTable, setShowSourceTable] = useState(false);
     const [responseData, setResponseData] = useState(null);
@@ -132,12 +130,16 @@ const DataFetcher = () => {
                         fetchData();
                         setShowSourceTable(true);
                         setShowTimeTable(false);
-                    }}>Open Source Table</Button>
+                    }}>Open Source Table
+                    </Button>
                     <Button onClick={() => {
                         setShowTimeTable(true);
                         setShowSourceTable(false);
-                    }}>Open Time Table</Button>
-                    {showSourceTable && !addingSource && <Button onClick={() => setAddingSource(true)}>Add Source</Button>}
+                    }}>Open Time Table
+                    </Button>
+                    {showSourceTable && !addingSource &&
+                        <Button onClick={() => {console.log("Add source button clicked");
+                            setAddingSource(true)}}>Add Source</Button>}
                     {showSourceTable &&
                         <DataTable
                             data={responseData}

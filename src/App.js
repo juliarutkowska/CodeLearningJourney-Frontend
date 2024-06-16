@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Layout, Typography } from 'antd';
 import DataFetcher from './DataFetcher';
 

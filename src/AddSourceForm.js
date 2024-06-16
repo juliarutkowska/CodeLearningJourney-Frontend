@@ -3,13 +3,16 @@ import { Input, Button, Form } from "antd";
 
 const AddSourceForm = ({ onAdd }) => {
     const [name, setName] = useState("");
-    const [id, setId] = useState("");
 
     const handleSubmit = () => {
-        if (!name || !id) return;
-        onAdd({ id, name });
+        if (!name){
+            console.log('nie ok');
+            return;
+        }
+
+        console.log('ok')
+        onAdd({ name });
         setName("");
-        setId("");
     };
 
     return (

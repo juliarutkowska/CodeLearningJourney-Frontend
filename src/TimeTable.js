@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {Table, Input, Button} from 'antd';
 
 const TimeTable = ({ data, onEdit, onDelete }) => {
