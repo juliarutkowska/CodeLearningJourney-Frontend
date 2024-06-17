@@ -55,8 +55,7 @@ const DataFetcher = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newSource),
-            });
+                body: JSON.stringify({ Name: newSource.name, DisplayName: newSource.name }),            });
             if (!response.ok) {
                 const errorMessage = await response.json();
                 console.error('Server response:', errorMessage);
