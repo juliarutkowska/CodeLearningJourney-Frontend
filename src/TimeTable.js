@@ -46,7 +46,7 @@ const TimeTable = ({ data, onEdit, onDelete }) => {
     return (
         <div>
             <Input
-                placeholder="Filter by time"
+                placeholder="Filter by hours"
                 value={filterText}
                 onChange={handleFilterChange}
                 style={{ marginBottom: '20px', width: '300px' }}
