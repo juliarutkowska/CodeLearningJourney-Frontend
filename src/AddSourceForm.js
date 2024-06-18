@@ -6,11 +6,9 @@ const AddSourceForm = ({ onAdd }) => {
 
     const handleSubmit = () => {
         if (!name){
-            console.log('nie ok');
             return;
         }
 
-        console.log('ok')
         onAdd({ name });
         setName("");
     };

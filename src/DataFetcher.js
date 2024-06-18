@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import AddSourceForm from './AddSourceForm';
 import EditSourceForm from './EditSourceForm';
+import EditTimeForm from "./EditTimeForm";
+import AddTimeForm from "./AddTimeForm";
 import DataTable from './DataTable';
 import TimeTable from './TimeTable';
-import {Spin, Alert, Button, Typography} from 'antd';
+import {Spin, Alert, Button} from 'antd';
 
 const DataFetcher = () => {
     const [showSourceTable, setShowSourceTable] = useState(false);
@@ -14,6 +16,8 @@ const DataFetcher = () => {
     const [editSourceId, setEditSourceId] = useState(null);
     const [addingSource, setAddingSource] = useState(false);
     const [showTimeTable, setShowTimeTable] = useState(false);
+    const [addingTime, setAddingTime] = useState(false);
+    const [editTimeId, setEditTimeId] = useState(null);
 
     useEffect(() => {
         fetchData();
@@ -69,6 +73,28 @@ const DataFetcher = () => {
         setAddingSource(false);
     };
 
+    const handleAddTime = async (newTime) => {
+        try {
+            const response = await fetch('http://localhost:5081/Time', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newTime),
+            });
+            if (!response.ok) {
+                const errorMessage = await response.json();
+                console.error('Server response:', errorMessage);
+
+                throw new Error('Failed to add time');
+            }
+            fetchTimeData();
+        } catch (error) {
+            setError(error.message);
+        }
+        setAddingTime(false);
+    };
+
     const handleEditSource = async (sourceId, updatedSource) => {
         try {
             const response = await fetch(`http://localhost:5081/LearningSources/${sourceId}`, {
@@ -88,6 +114,25 @@ const DataFetcher = () => {
         setEditSourceId(null);
     };
 
+    const handleEditTime = async (timeId, updatedTime) => {
+        try {
+            const response = await fetch(`http://localhost:5081/Time/${timeId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedTime),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update time');
+            }
+            fetchTimeData();
+        } catch (error) {
+            setError(error.message);
+        }
+        setEditTimeId(null);
+    };
+
     const handleDeleteSource = async (sourceId) => {
         try {
             const response = await fetch(`http://localhost:5081/LearningSources/${sourceId}`, {
@@ -97,6 +142,20 @@ const DataFetcher = () => {
                 throw new Error('Failed to delete source');
             }
             fetchData();
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const handleDeleteTime = async (timeId) => {
+        try {
+            const response = await fetch(`http://localhost:5081/Time/${timeId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete time');
+            }
+            fetchTimeData();
         } catch (error) {
             setError(error.message);
         }
@@ -112,18 +171,38 @@ const DataFetcher = () => {
 
     return (
         <div>
-            {addingSource && !editSourceId && <AddSourceForm onAdd={handleAddSource} />}
+            {addingSource && !editSourceId &&
+                <AddSourceForm onAdd={handleAddSource} />}
+            {addingTime && !editTimeId &&
+                <AddTimeForm onAdd={handleAddTime} />}
+
+            {editTimeId && (
+                <EditTimeForm
+                    time={timeData.find((time) =>
+                        time.id === editTimeId)}
+                    onEdit={(updatedTime) =>
+                        handleEditTime(editTimeId, updatedTime)}
+                    onCancel={() => {
+                        setEditTimeId(null);
+                        setAddingTime(false);
+                    }}
+                />
+            )}
+
             {editSourceId && (
                 <EditSourceForm
-                    source={responseData.find((source) => source.id === editSourceId)}
-                    onEdit={(updatedSource) => handleEditSource(editSourceId, updatedSource)}
+                    source={responseData.find((source) =>
+                        source.id === editSourceId)}
+                    onEdit={(updatedSource) =>
+                        handleEditSource(editSourceId, updatedSource)}
                     onCancel={() => {
                         setEditSourceId(null);
                         setAddingSource(false);
                     }}
                 />
             )}
-            {!editSourceId &&
+
+            {!editSourceId && !editTimeId &&
                 <>
                     <Button onClick={() => {
                         fetchData();
@@ -137,8 +216,9 @@ const DataFetcher = () => {
                     }}>Open Time Table
                     </Button>
                     {showSourceTable && !addingSource &&
-                        <Button onClick={() => {console.log("Add source button clicked");
-                            setAddingSource(true)}}>Add Source</Button>}
+                        <Button onClick={() =>
+                            setAddingSource(true)}>Add Source
+                        </Button>}
                     {showSourceTable &&
                         <DataTable
                             data={responseData}
@@ -149,26 +229,84 @@ const DataFetcher = () => {
                             onDelete={handleDeleteSource}
                         />
                     }
-                    {showTimeTable && <TimeTable data={timeData} onEdit={setEditSourceId} onDelete={handleDeleteSource} />}
+                    {showTimeTable && !addingTime &&
+                        <Button onClick={() =>
+                            setAddingTime(true)}>Add Time
+                        </Button>}
+                    {showTimeTable &&
+                        <TimeTable
+                            data={timeData}
+                            onEdit={(timeId) => {
+                                setEditTimeId(timeId);
+                                setAddingTime(false);
+                            }}
+                            onDelete={handleDeleteTime}
+                        />
+                    }
                 </>
             }
         </div>
     );
+
     // return (
     //     <div>
-    //         <AddSourceForm onAdd={handleAddSource} />
-    //         <DataTable
-    //             data={responseData}
-    //             onEdit={(sourceId) => setEditSourceId(sourceId)}
-    //             onDelete={handleDeleteSource}
-    //         />
+    //         {addingSource && !editSourceId &&
+    //             <AddSourceForm onAdd={handleAddSource} />}
+    //         {addingTime && !editTimeId && <AddTimeForm onAdd={handleAddTime} />}
+    //
+    //         {editTimeId && (
+    //             <EditTimeForm
+    //                 time={timeData.find((time) => time.id === editTimeId)}
+    //                 onEdit={(updatedTime) => handleEditTime(editTimeId, updatedTime)}
+    //                 onCancel={() => {
+    //                     setEditTimeId(null);
+    //                     setAddingTime(false);
+    //                 }}
+    //                 />
+    //         )}
+    //
     //         {editSourceId && (
     //             <EditSourceForm
-    //                 source={responseData.find((source) => source.id === editSourceId)}
-    //                 onEdit={(updatedSource) => handleEditSource(editSourceId, updatedSource)}
-    //                 onCancel={() => setEditSourceId(null)}
+    //                 source={responseData.find((source) =>
+    //                     source.id === editSourceId)}
+    //                 onEdit={(updatedSource) =>
+    //                     handleEditSource(editSourceId, updatedSource)}
+    //                 onCancel={() => {
+    //                     setEditSourceId(null);
+    //                     setAddingSource(false);
+    //                 }}
     //             />
     //         )}
+    //
+    //         {!editSourceId &&
+    //             <>
+    //                 <Button onClick={() => {
+    //                     fetchData();
+    //                     setShowSourceTable(true);
+    //                     setShowTimeTable(false);
+    //                 }}>Open Source Table
+    //                 </Button>
+    //                 <Button onClick={() => {
+    //                     setShowTimeTable(true);
+    //                     setShowSourceTable(false);
+    //                 }}>Open Time Table
+    //                 </Button>
+    //                 {showSourceTable && !addingSource &&
+    //                     <Button onClick={() => {console.log("Add source button clicked");
+    //                         setAddingSource(true)}}>Add Source</Button>}
+    //                 {showSourceTable &&
+    //                     <DataTable
+    //                         data={responseData}
+    //                         onEdit={(sourceId) => {
+    //                             setEditSourceId(sourceId);
+    //                             setAddingSource(false);
+    //                         }}
+    //                         onDelete={handleDeleteSource}
+    //                     />
+    //                 }
+    //                 {showTimeTable && <TimeTable data={timeData} onEdit={setEditSourceId} onDelete={handleDeleteSource} />}
+    //             </>
+    //         }
     //     </div>
     // );
 };
