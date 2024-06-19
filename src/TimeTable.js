@@ -9,7 +9,7 @@ const TimeTable = ({ data, onEdit, onDelete }) => {
     };
 
     const filteredData = data.filter(item =>
-        item.times.toString().includes(filterText.toLowerCase())
+        item.times?.toString().includes(filterText.toLowerCase())
     );
 
     const columns = [
