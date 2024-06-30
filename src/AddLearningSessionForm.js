@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input, Button, Form } from "antd";
 
-const AddTimeForm = ({ onAdd, onCancel }) => {
+const AddLearningSessionForm = ({ onAdd, onCancel }) => {
     const [time, setTime] = useState("");
 
     const handleSubmit = () => {
@@ -30,4 +30,4 @@ const AddTimeForm = ({ onAdd, onCancel }) => {
     );
 };
 
-export default AddTimeForm;
+export default AddLearningSessionForm;

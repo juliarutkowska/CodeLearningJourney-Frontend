@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Spin, Alert, Button } from 'antd';
 import AddSourceForm from './AddSourceForm';
 import EditSourceForm from './EditSourceForm';
-import EditTimeForm from "./EditTimeForm";
-import AddTimeForm from "./AddTimeForm";
+import EditLearningSessionForm from "./EditLearningSessionForm";
+import AddLearningSessionForm from "./AddLearningSessionForm";
 import DataTableComponent from './DataTableComponent';
-import TimeTableComponent from './TimeTableComponent';
+import LearningSessionTableComponent from './LearningSessionTableComponent';
 import { fetchDataSources, fetchTimeData, addSource, updateSource, deleteSource, addTime, updateTime, deleteTime } from './apiService';
 
 const DataFetcher = () => {
@@ -111,7 +111,7 @@ const DataFetcher = () => {
     return (
         <div>
             {addingSource && !editSourceId && <AddSourceForm onAdd={handleAddSource} />}
-            {addingTime && !editTimeId && <AddTimeForm onAdd={handleAddTime} />}
+            {addingTime && !editTimeId && <AddLearningSessionForm onAdd={handleAddTime} />}
             {editSourceId && (
                 <EditSourceForm
                     source={responseData.find(source => source.id === editSourceId)}
@@ -123,7 +123,7 @@ const DataFetcher = () => {
                 />
             )}
             {editTimeId && (
-                <EditTimeForm
+                <EditLearningSessionForm
                     time={timeData.find(time => time.id === editTimeId)}
                     onEdit={updatedTime => handleEditTime(editTimeId, updatedTime)}
                     onCancel={() => {
@@ -153,7 +153,7 @@ const DataFetcher = () => {
                         />
                     )}
                     {showTimeTable && !addingTime && (
-                        <TimeTableComponent
+                        <LearningSessionTableComponent
                             timeData={timeData}
                             setEditTimeId={setEditTimeId}
                             setAddingTime={setAddingTime}
@@ -172,7 +172,7 @@ export default DataFetcher;
 // import React, { useState, useEffect } from 'react';
 // import AddSourceForm from './AddSourceForm';
 // import EditSourceForm from './EditSourceForm';
-// import EditTimeForm from "./EditTimeForm";
+// import EditLearningSessionForm from "./EditLearningSessionForm";
 // import AddTimeForm from "./AddTimeForm";
 // import DataTable from './DataTable';
 // import TimeTable from './TimeTable';
@@ -348,7 +348,7 @@ export default DataFetcher;
 //                 <AddTimeForm onAdd={handleAddTime} />}
 //
 //             {editTimeId && (
-//                 <EditTimeForm
+//                 <EditLearningSessionForm
 //                     time={timeData.find((time) =>
 //                         time.id === editTimeId)}
 //                     onEdit={(updatedTime) =>
@@ -426,7 +426,7 @@ export default DataFetcher;
 //     //         {addingTime && !editTimeId && <AddTimeForm onAdd={handleAddTime} />}
 //     //
 //     //         {editTimeId && (
-//     //             <EditTimeForm
+//     //             <EditLearningSessionForm
 //     //                 time={timeData.find((time) => time.id === editTimeId)}
 //     //                 onEdit={(updatedTime) => handleEditTime(editTimeId, updatedTime)}
 //     //                 onCancel={() => {

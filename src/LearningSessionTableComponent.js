@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button } from 'antd';
-import TimeTable from './TimeTable';
+import LearningSessionTable from './LearningSessionTable';
 
-const TimeTableComponent = ({ timeData, setEditTimeId, setAddingTime, handleDeleteTime }) => (
+const LearningSessionTableComponent = ({ timeData, setEditTimeId, setAddingTime, handleDeleteTime }) => (
     <>
         <Button onClick={() => setAddingTime(true)}>Add Time</Button>
-        <TimeTable
+        <LearningSessionTable
             data={timeData}
             onEdit={(timeId) => {
                 setEditTimeId(timeId);
@@ -16,4 +16,4 @@ const TimeTableComponent = ({ timeData, setEditTimeId, setAddingTime, handleDele
     </>
 );
 
-export default TimeTableComponent;
+export default LearningSessionTableComponent;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 
-const EditTimeForm = ({ time, onEdit, onCancel }) => {
+const EditLearningSessionForm = ({ time, onEdit, onCancel }) => {
     const [timeValue, setTimeValue] = useState('');
 
     useEffect(() => {
@@ -40,4 +40,4 @@ const EditTimeForm = ({ time, onEdit, onCancel }) => {
     );
 };
 
-export default EditTimeForm;
+export default EditLearningSessionForm;
